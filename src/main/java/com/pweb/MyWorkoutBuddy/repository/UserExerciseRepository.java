@@ -11,5 +11,4 @@ import java.util.Optional;
 public interface UserExerciseRepository extends JpaRepository<UserExercise, Long> {
     List<UserExercise> findByUserId(Long userId);
     Optional<UserExercise> findByUserIdAndExerciseId(Long userId, Long exerciseId);
-
 }
