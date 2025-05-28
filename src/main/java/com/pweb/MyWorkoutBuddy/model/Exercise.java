@@ -18,7 +18,9 @@ public class Exercise {
 
     private String name;
 
-    private String difficulty;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Difficulty difficulty;
 
     @ElementCollection
     @CollectionTable(name = "exercise_targets", joinColumns = @JoinColumn(name = "exercise_id"))
