@@ -33,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Response> createAuthenticationToken(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<Response> createAuthenticationToken(@Valid @RequestBody UserDTO userDTO) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword()));
         User user = (User) userService.findUserByUsername(userDTO.getUsername()).getBody().getData();
         String username = user.getUsername();
