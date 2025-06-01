@@ -1,11 +1,7 @@
 package com.example.MyWorkoutBuddy.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -21,14 +17,16 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
-    private Set<String> roles = new HashSet<>();
+    private String roles;
 
-    public User(String username, String password, Set<String> roles) {
+    public User(String username, String password, String roles) {
         this.username = username;
         this.password = password;
         this.roles = roles;
+    }
+
+    public User() {
+
     }
 }

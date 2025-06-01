@@ -19,9 +19,8 @@ public class UserService {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
-        Set<String> roles = new HashSet<>();
-        roles.add("ROLE_" + role.toUpperCase());
-        User user = new User(username, passwordEncoder.encode(password), roles);
+        String userRole = "ROLE_" + role.toUpperCase();
+        User user = new User(username, passwordEncoder.encode(password), userRole);
         return userRepository.save(user);
     }
 }
