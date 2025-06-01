@@ -5,6 +5,8 @@ import com.example.MyWorkoutBuddy.model.User;
 import com.example.MyWorkoutBuddy.repository.ExerciseRepository;
 import com.example.MyWorkoutBuddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +19,14 @@ public class ExerciseService {
     private final ExerciseRepository exerciseRepository;
     private final UserRepository userRepository;
 
-    public List<Exercise> getAllExercises() {
+    public Page<Exercise> getAllExercises(Pageable pageable, String role) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (user.getRoles().contains("ROLE_ADMIN")) {
-            return exerciseRepository.findAll();
+        if ("ADMIN".equalsIgnoreCase(role) && user.getRoles().contains("ROLE_ADMIN")) {
+            return exerciseRepository.findAll(pageable);
         }
-        return exerciseRepository.findByUserId(user.getId());
+        return exerciseRepository.findByUserId(user.getId(), pageable);
     }
 
     public Optional<Exercise> getExerciseById(Long id) {
@@ -77,10 +79,10 @@ public class ExerciseService {
         exerciseRepository.deleteById(id);
     }
 
-    public List<Exercise> getFavoriteExercises() {
+    public Page<Exercise> getFavoriteExercises(Pageable pageable, String role) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return exerciseRepository.findByFavoriteTrueAndUserId(user.getId());
+        return exerciseRepository.findByFavoriteTrueAndUserId(user.getId(), pageable);
     }
 }

@@ -38,4 +38,19 @@ public class Exercise {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public Exercise(String name, String difficulty, int sets, int reps, List<String> targets, String image, boolean favorite, User user) {
+        this.name = name;
+        this.difficulty = difficulty;
+        this.sets = sets;
+        this.reps = reps;
+        this.targets = targets;
+        this.image = image;
+        this.favorite = favorite;
+        this.user = user;
+    }
+
+    public Exercise() {
+
+    }
 }

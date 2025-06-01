@@ -17,8 +17,7 @@ import java.util.function.Function;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret:yourSecretKey}")
-    private String jwtSecret;
+    private final String jwtSecret = "eyJhbGciOiJIUzI1NiJ9.ew0KICAic3ViIjogIjEyMzQ1Njc4OTAiLA0KICAibmFtZSI6ICJBbmlzaCBOYXRoIiwNCiAgImlhdCI6IDE1MTYyMzkwMjINCn0.LKt-Gbp5jkuJz--E0FOZ-q3lxNskymXf_Ow_7YpN_Jg";
 
     private final Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
 
@@ -58,20 +57,16 @@ public class JwtTokenProvider {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
     public boolean validateToken(String token) {
         SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
         try {
-            Claims claims = Jwts.parser()
+            Jwts.parser()
                     .verifyWith(key)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
 
-            Date expiration = claims.getExpiration();
+            Date expiration = extractExpiration(token);
             return expiration.after(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             return false;
