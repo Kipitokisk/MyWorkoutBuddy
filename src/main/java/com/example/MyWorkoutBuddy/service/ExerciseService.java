@@ -23,10 +23,10 @@ public class ExerciseService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if ("ADMIN".equalsIgnoreCase(role) && user.getRoles().contains("ROLE_ADMIN")) {
+        if ("ADMIN".equalsIgnoreCase(role) && user.getRole().equals("ROLE_ADMIN")) {
             return exerciseRepository.findAll(pageable);
         }
-        return exerciseRepository.findByUserId(user.getId(), pageable);
+        return exerciseRepository.findExerciseByUser_Id(user.getId(), pageable);
     }
 
     public Optional<Exercise> getExerciseById(Long id) {
@@ -34,7 +34,7 @@ public class ExerciseService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Optional<Exercise> exercise = exerciseRepository.findById(id);
-        if (exercise.isPresent() && (exercise.get().getUser().getId().equals(user.getId()) || user.getRoles().contains("ROLE_ADMIN"))) {
+        if (exercise.isPresent() && (exercise.get().getUser().getId().equals(user.getId()) || user.getRole().equals("ROLE_ADMIN"))) {
             return exercise;
         }
         return Optional.empty();
@@ -54,7 +54,7 @@ public class ExerciseService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Exercise exercise = exerciseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Exercise not found with id " + id));
-        if (!exercise.getUser().getId().equals(user.getId()) && !user.getRoles().contains("ROLE_ADMIN")) {
+        if (!exercise.getUser().getId().equals(user.getId()) && !user.getRole().equals("ROLE_ADMIN")) {
             throw new RuntimeException("Unauthorized to update this exercise");
         }
         exercise.setName(exerciseDetails.getName());
@@ -73,16 +73,16 @@ public class ExerciseService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Exercise exercise = exerciseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Exercise not found with id " + id));
-        if (!exercise.getUser().getId().equals(user.getId()) && !user.getRoles().contains("ROLE_ADMIN")) {
+        if (!exercise.getUser().getId().equals(user.getId()) && !user.getRole().equals("ROLE_ADMIN")) {
             throw new RuntimeException("Unauthorized to delete this exercise");
         }
         exerciseRepository.deleteById(id);
     }
 
-    public Page<Exercise> getFavoriteExercises(Pageable pageable, String role) {
+    public Page<Exercise> getFavoriteExercises(Pageable pageable) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return exerciseRepository.findByFavoriteTrueAndUserId(user.getId(), pageable);
+        return exerciseRepository.findExercisesByFavoriteTrueAndUser_Id(user.getId(), pageable);
     }
 }

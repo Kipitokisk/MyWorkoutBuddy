@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,11 +22,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "http://localhost:3000")
-@RequiredArgsConstructor
 public class AuthController {
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider tokenProvider;
-    private final UserService userService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+
+    @Autowired
+    private UserService userService;
 
     @Operation(summary = "Generate JWT token", description = "Authenticate a user and generate a JWT token.")
     @ApiResponses({
@@ -45,6 +50,7 @@ public class AuthController {
             String jwt = tokenProvider.generateToken(authentication);
             return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace(); // log the real reason
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
