@@ -19,7 +19,7 @@ public class UserService {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
-        String userRole = "ROLE_" + role.toUpperCase();
+        String userRole = "ROLE_USER";
         User user = new User(username, passwordEncoder.encode(password), userRole);
         return userRepository.save(user);
     }

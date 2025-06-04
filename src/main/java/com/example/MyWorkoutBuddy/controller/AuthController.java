@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Authentication", description = "API for user authentication and registration")
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
     @Autowired
@@ -50,7 +50,7 @@ public class AuthController {
             String jwt = tokenProvider.generateToken(authentication);
             return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace(); // log the real reason
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }

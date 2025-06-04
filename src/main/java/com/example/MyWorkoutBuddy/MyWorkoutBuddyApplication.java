@@ -17,7 +17,7 @@ public class MyWorkoutBuddyApplication {
 	}
 
 	@Bean
-	CommandLineRunner initDatabase(ExerciseRepository exerciseRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	CommandLineRunner initDatabase(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		return args -> {
 			User admin, user;
 			if (userRepository.findByUsername("admin") == null) {

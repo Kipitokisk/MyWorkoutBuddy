@@ -19,11 +19,11 @@ public class ExerciseService {
     private final ExerciseRepository exerciseRepository;
     private final UserRepository userRepository;
 
-    public Page<Exercise> getAllExercises(Pageable pageable, String role) {
+    public Page<Exercise> getAllExercises(Pageable pageable) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if ("ADMIN".equalsIgnoreCase(role) && user.getRole().equals("ROLE_ADMIN")) {
+        if (user.getRole().equals("ROLE_ADMIN")) {
             return exerciseRepository.findAll(pageable);
         }
         return exerciseRepository.findExerciseByUser_Id(user.getId(), pageable);

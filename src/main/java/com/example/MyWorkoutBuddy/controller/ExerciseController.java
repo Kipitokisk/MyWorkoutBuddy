@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Exercises", description = "API for managing exercises")
 @RestController
 @RequestMapping("/api/exercises")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173")
 @SecurityRequirement(name = "bearerAuth")
 public class ExerciseController {
 
@@ -35,10 +35,9 @@ public class ExerciseController {
     @GetMapping
     public ResponseEntity<Page<Exercise>> getAllExercises(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "USER") String role) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Exercise> exercises = exerciseService.getAllExercises(pageable, role);
+        Page<Exercise> exercises = exerciseService.getAllExercises(pageable);
         return new ResponseEntity<>(exercises, HttpStatus.OK);
     }
 
